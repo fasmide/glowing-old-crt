@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os/exec"
@@ -12,7 +13,7 @@ import (
 type Video struct {
 	Url     string
 	DataUrl string
-	Data    bytes.Buffer
+	Data    []byte
 	Title   string
 }
 
@@ -55,14 +56,11 @@ func (v *Video) Download() error {
 	// Instrument with our counter.
 	src := io.TeeReader(resp.Body, counter)
 
-	count, err := io.Copy(&v.Data, src)
+	v.Data, err = ioutil.ReadAll(src)
 
 	if err != nil {
 		return err
 	}
-
-	log.Println("Transferred", count, "bytes")
-	log.Println("Counted", counter.Bytes, "bytes")
 
 	return nil
 }
