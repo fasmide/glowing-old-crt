@@ -22,10 +22,8 @@ func main() {
 	v := NewVideo(m.RandomVideo().Url)
 	v.Download()
 
-	player := NewMPlayer()
+	player := NewOmxPlayer()
 
-	go player.Play(&v.Data)
-	go player.Play(&v.Data)
 	player.Play(&v.Data)
 
 }
